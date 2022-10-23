@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Event;
+use Auth;
+use Redirect;
 
 class EventController extends Controller
 {
@@ -14,7 +16,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::latest()->paginate(5);
+        $events = Event::orderBy('start_date', 'ASC')->paginate(5);
         return view('events.index',compact('events'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -44,14 +46,7 @@ class EventController extends Controller
             'end_date' => 'required|date|after:start_date',
             'status' => 'required',
         ]);
-
         $form_details = $request->except('_token');
-        $start_date = $form_details['start_date'];
-        $end_date = $form_details['end_date'];
-        $start_date_by_underscore = explode("/", $start_date);
-        $end_date_by_underscore = explode("/", $end_date);
-        $form_details['start_date'] = $start_date_by_underscore[2] . '-' . $start_date_by_underscore[0] . '-' . $start_date_by_underscore[1] . '';
-        $form_details['end_date'] = $end_date_by_underscore[2] . '-' . $end_date_by_underscore[0] . '-' . $end_date_by_underscore[1] . '';
         Event::create($form_details);
 
         return redirect()->route('events.index')
@@ -82,11 +77,6 @@ class EventController extends Controller
     public function edit($id)
     {
         $event = (object) Event::findOrFail($id);
-        $start_date_by_underscore = explode("-", $event->start_date);
-        $end_date_by_underscore = explode("-", $event->end_date);
-        $event->start_date = $start_date_by_underscore[1] . '-' . $start_date_by_underscore[2] . '-' . $start_date_by_underscore[0] . '';
-        $event->end_date = $end_date_by_underscore[1] . '-' . $end_date_by_underscore[2] . '-' . $end_date_by_underscore[0] . '';
-
         return view('events.edit',compact('event'));
     }
 
@@ -100,12 +90,6 @@ class EventController extends Controller
     public function update(Request $request, $id)
     {
         $form_details = $request->except('_token', '_method');
-        $start_date = $form_details['start_date'];
-        $end_date = $form_details['end_date'];
-        $start_date_by_underscore = explode("/", $start_date);
-        $end_date_by_underscore = explode("/", $end_date);
-        $form_details['start_date'] = $start_date_by_underscore[2] . '-' . $start_date_by_underscore[0] . '-' . $start_date_by_underscore[1] . '';
-        $form_details['end_date'] = $end_date_by_underscore[2] . '-' . $end_date_by_underscore[0] . '-' . $end_date_by_underscore[1] . '';
         $request->validate([
             'title' => 'required',
             'description' => 'required',
@@ -132,4 +116,49 @@ class EventController extends Controller
         return redirect()->route('events.index')
             ->with('success','Events deleted successfully');
     }
+    public function finished_events()
+    {
+        $currentdate = date('Y-m-d');
+        $events = Event::orderBy('start_date', 'ASC')->where('end_date', '<' , $currentdate )->paginate(5);
+        return view('events.index',compact('events'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+    public function upcoming_events()
+    {
+        $currentdate = date('Y-m-d');
+        $events = Event::orderBy('start_date', 'ASC')->where('start_date', '>' , $currentdate )->paginate(5);
+        return view('events.index',compact('events'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+    public function upcoming_events_within_seven_days()
+    {
+        $currentdate = date('Y-m-d');
+        $nextweek = date("Y-m-d", strtotime("+1 week"));
+        $events = Event::orderBy('start_date', 'ASC')->whereBetween('start_date', [$currentdate, $nextweek])->paginate(5);
+        return view('events.index',compact('events'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+    public function finished_events_within_seven_days()
+    {
+        $currentdate = date('Y-m-d');
+        $lastWeek = date("Y-m-d", strtotime("-1 week"));
+        $events = Event::orderBy('start_date', 'ASC')->whereBetween('end_date', [$lastWeek,$currentdate ])->paginate(5);
+        return view('events.index',compact('events'))
+            ->with('i', (request()->input('page', 1) - 1) * 5);
+    }
+    public function logout()
+    {   
+        Auth::logout();
+        return Redirect::to('login');
+
+    }
+    public function eventDelete(Request $request) 
+    {
+        $event = Event::findOrFail($request->id);
+        $event->delete();
+
+        return redirect()->route('events.index')
+            ->with('success','Events deleted successfully');
+    }
+
 }

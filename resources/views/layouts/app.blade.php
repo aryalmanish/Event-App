@@ -55,11 +55,13 @@
                 <!--                </button>-->
             </div>
             <div>
-                <a class="navbar-brand brand-logo" href="index.html">
-                    Events
-                </a>
+                @if(Auth::check())
+                    <a class="navbar-brand brand-logo" href="/events">
+                        Event
+                    </a>
+                @endif
                 <a class="navbar-brand brand-logo-mini" href="index.html">
-                    Events
+                    Eventsb
                 </a>
             </div>
         </div>
@@ -78,20 +80,22 @@
                         <input type="text" class="form-control">
                     </div>
                 </li>
-                <li class="nav-item dropdown d-none d-lg-block user-dropdown">
-                    <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-regular fa-list-dropdown">Account</i></a>
-                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
-                        <div class="dropdown-header text-center">
-                            <p class="mb-1 mt-3 font-weight-semibold">@if(Auth::check()) {{Auth::user()->name}} @else Administrator @endif </p>
-                            <p class="fw-light text-muted mb-0">@if(Auth::check()) {{Auth::user()->email}} @else Administrator @gmail.com @endif</p>
+                @if(Auth::check())
+                    <li class="nav-item dropdown d-none d-lg-block user-dropdown">
+                        <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-regular fa-list-dropdown">Account</i></a>
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
+                            <div class="dropdown-header text-center">
+                                <p class="mb-1 mt-3 font-weight-semibold">@if(Auth::check()) {{Auth::user()->name}} @else Administrator @endif </p>
+                                <p class="fw-light text-muted mb-0">@if(Auth::check()) {{Auth::user()->email}} @else Administrator @gmail.com @endif</p>
+                            </div>
+                            <!--                        <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Profile <span class="badge badge-pill badge-danger">1</span></a>-->
+                            <!--                        <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-calendar-check-outline text-primary me-2"></i> Activity</a>-->
+                            <!--                        <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-help-circle-outline text-primary me-2"></i> FAQ</a>-->
+                            <a class="" href="{{url('loggedout')}}">&nbsp;&nbsp;&nbsp;&nbsp;<i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
                         </div>
-                        <!--                        <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Profile <span class="badge badge-pill badge-danger">1</span></a>-->
-                        <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-message-text-outline text-primary me-2"></i> Messages</a>
-                        <!--                        <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-calendar-check-outline text-primary me-2"></i> Activity</a>-->
-                        <!--                        <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-help-circle-outline text-primary me-2"></i> FAQ</a>-->
-                        <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
-                    </div>
-                </li>
+                    </li>
+
+                @endif
             </ul>
             <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">
                 <span class="mdi mdi-menu"></span>
@@ -273,34 +277,21 @@
         <!-- partial:partials/_sidebar.html -->
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
             <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{asset('/home')}}">
-                        <i class="mdi mdi-grid-large menu-icon"></i>
-                        <span class="menu-title">Dashboard</span>
-                    </a>
-                </li>
-<!--                <li class="nav-item nav-category">Events</li>-->
-                <li class="nav-item"> <a class="nav-link" href="{{asset('/events')}}">Events</a></li>
-                <li class="nav-item"> <a class="nav-link" href="">Finished Events</a></li>
-                <li class="nav-item"> <a class="nav-link" href="">Upcoming Events</a></li>
-                <li class="nav-item"> <a class="nav-link" href="">Upcoming Events Within 7 days</a></li>
-                <li class="nav-item"> <a class="nav-link" href="">Finished Events Within 7 days</a></li>
+                @if(Auth::check())
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{asset('/home')}}">
+                            <i class="mdi mdi-grid-large menu-icon"></i>
+                            <span class="menu-title">Dashboard</span>
+                        </a>
+                    </li>
+                @endif
 
+
+<!--                <li class="nav-item nav-category">Events</li>-->
+                @if(Auth::check())
+                    <li class="nav-item"> <a class="nav-link" href="{{asset('/events')}}">Events</a></li>
+                @endif
                 <li class="nav-item">
-<!--                    <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">-->
-<!--                        <i class="menu-icon mdi mdi-floor-plan"></i>-->
-<!--                        <span class="menu-title">Events</span>-->
-<!--                        <i class="menu-arrow"></i>-->
-<!--                    </a>-->
-<!--                    <div class="collapse" id="ui-basic">-->
-<!--                        <ul class="nav flex-column sub-menu">-->
-<!--                            <li class="nav-item"> <a class="nav-link" href="{{asset('/events')}}">Events</a></li>-->
-<!--                            <li class="nav-item"> <a class="nav-link" href="">Finished Events</a></li>-->
-<!--                            <li class="nav-item"> <a class="nav-link" href="">Upcoming Events</a></li>-->
-<!--                            <li class="nav-item"> <a class="nav-link" href="">Upcoming Events Within 7 days</a></li>-->
-<!--                            <li class="nav-item"> <a class="nav-link" href="">Finished Events Within 7 days</a></li>-->
-<!--                        </ul>-->
-<!--                    </div>-->
                 </li>
             </ul>
         </nav>

@@ -33,28 +33,30 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
-                <strong>Event Title:</strong>
-                <input type="text" name="title" class="form-control" placeholder="title">
+                <strong><br><br>Event Title:</strong>
+                <br><br><input type="text" name="title" value="{{old('title')}}" class="" placeholder="title">
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong>Starting date</strong>
-                <input type="text" id="start_date" function="hello()" name="start_date" class="form-control" placeholder="Format : yyyy-mm-dd">
+                <br><br><input type="date"  value="{{old('starting_date')}}" id="start_date"  value="{{old('title')}}" function="hello()" name="start_date" class="" placeholder="Format : yyyy-mm-dd">
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong>End date</strong>
-                <input type="text" id="end_date" name="end_date" class="form-control" placeholder="Format : yyyy-mm-dd">
+                <br><br>
+                <input type="date" id="end_date"  value="{{old('ending_date')}}" name="end_date" class="" placeholder="Format : yyyy-mm-dd">
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
                 <strong>Status:</strong> <br>
-                <select id="status" name="status" class="form-control">
-                    <option value="active">Active</option>
-                    <option value="in_active">Inactive</option>
+                <br>
+                <select id="status" name="status" class="">
+                    <option value="active" @if(old('status') == 'active') selected @endif>Active</option>
+                    <option value="in_active" @if(old('status') == 'inactive') selected @endif >Inactive</option>
                 </select>
             </div>
         </div>
@@ -68,7 +70,7 @@
         <title>
 
         </title>
-        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+        <div class="col-xs-2 col-sm-2 col-md-2 text-center">
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
     </div>
@@ -77,10 +79,10 @@
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script>
-    $( function() {
-        $( "#start_date" ).datepicker({ dateFormat: 'yyyy-mm-dd' });
-        $( "#end_date" ).datepicker({ dateFormat: 'yyyy-mm-dd' });
-    } );
+    // $( function() {
+    //     $( "#start_date" ).datepicker({ dateFormat: 'yyyy-mm-dd' });
+    //     $( "#end_date" ).datepicker({ dateFormat: 'yyyy-mm-dd' });
+    // } );
 </script>
 
 @endsection
